@@ -2,6 +2,8 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
+use std::process::{Command, Stdio};
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -48,8 +50,32 @@ fn main() {
             simple_command,
             command_with_message,
             command_with_object,
-            command_with_error
+            command_with_error,
+            cut_movie
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn cut_movie() {
+    let command = |start, end, output| {
+        format!(
+            "ffmpeg -i ~/input.mp4 -ss {start} -c copy -t {end} {output}",
+            start = start,
+            end = end,
+            output = output
+        )
+    };
+    let start = "00:00:00.0";
+    let end = "00:00:05.0";
+    let name = "output.mp4";
+
+    let mut ffmpeg = Command::new("/bin/sh")
+        .args(&["-c", &command(start, end, name)])
+        .stdin(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    ffmpeg.wait().unwrap();
 }
