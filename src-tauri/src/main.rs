@@ -61,14 +61,14 @@ fn main() {
 fn cut_movie() {
     let command = |start, end, output| {
         format!(
-            "ffmpeg -i ~/input.mp4 -ss {start} -c copy -t {end} {output}",
+            "ffmpeg  -ss {start} -i ./input.mp4 -to {end} -c copy {output}",
             start = start,
             end = end,
             output = output
         )
     };
-    let start = "00:00:00.0";
-    let end = "00:00:05.0";
+    let start = "00:00:00";
+    let end = "00:00:05";
     let name = "output.mp4";
 
     let mut ffmpeg = Command::new("/bin/sh")
