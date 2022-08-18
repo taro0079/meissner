@@ -1,5 +1,4 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { startTransition } from "react";
 import "./App.css";
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
@@ -8,15 +7,16 @@ import {Button} from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { Heading } from "@chakra-ui/react"
 import Form from "./form";
-import { useState } from 'react';
+import {startTimeAtom, endTimeAtom} from './myjotai';
+import { useAtom } from "jotai";
 
 function App() {
 
   const openFileDialog = () => {
     open().then((files) => console.log(files));
   };
-  function exeffmpeg() {
-    invoke("cut_movie", {start: "00:00:00", end: "00:00:05"});
+  const exeffmpeg = (startTime: string, endTime: string) => {
+    invoke("cut_movie", {start: startTime, end: endTime});
   }
 
   function executeCommands() {
@@ -30,8 +30,9 @@ function App() {
         });
     }
   }
-  const startTime = "";
-  const endTime = "";
+
+  const [startTime] = useAtom(startTimeAtom)
+  const [endTime] = useAtom(endTimeAtom)
 
   return (
     <ChakraProvider>
@@ -40,10 +41,12 @@ function App() {
             <Heading>Meissner</Heading>
             <Text>Extremely simple movie editor</Text>
           </div>
-          <Button onClick={openFileDialog}>Click</Button>
-          <Button colorScheme='teal' onClick={exeffmpeg}>Click</Button>
-          <Form label='Start Time'/>
-          <Form label='End Time'/>
+          <Button onClick={openFileDialog}>Open File</Button>
+          <Button colorScheme='teal' onClick={() => exeffmpeg(startTime, endTime)}>Cut!</Button>
+          <Form label='Start Time' atom={startTimeAtom}/>
+          <Form label='End Time' atom={endTimeAtom}/>
+          <p>{startTime}</p>
+          <p>{endTime}</p>
       </div>
     </ChakraProvider>
   );
