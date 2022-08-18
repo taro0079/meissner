@@ -47,7 +47,7 @@ function App() {
           <Form label="End Time" atom={endTimeAtom} />
           <Button
               colorScheme="teal"
-              onClick={() => exeffmpeg(startTime, endTime, "./input.mp4")}
+              onClick={() => exeffmpeg(startTime, endTime, path)}
           >
             Cut!
           </Button>

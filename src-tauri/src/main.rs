@@ -5,8 +5,6 @@
 use std::process::{Command, Stdio};
 
 use serde::{Deserialize, Serialize};
-use std::path::Path;
-use std::ffi::OsStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct MyMessage {
@@ -71,8 +69,8 @@ fn cut_movie(start: &str, end: &str, path: &str) {
             path = path
         )
     };
-    let pathname = Path::new(path);
-    let name = pathname.file_stem() + "_output.mp4";
+    let splitted: Vec<&str> = path.split(".").collect();
+    let name = String::from(splitted[0]) + "_output.mp4" ;
 
     let mut ffmpeg = Command::new("/bin/sh")
         .args(&["-c", &command(start, end, name, path)])
