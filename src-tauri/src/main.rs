@@ -58,21 +58,21 @@ fn main() {
 }
 
 #[tauri::command]
-fn cut_movie(start: &str, end: &str) {
-    let command = |start, end, output| {
+fn cut_movie(start: &str, end: &str, path: &str) {
+    print!("{}", path);
+    let command = |start, end, output, path| {
         format!(
-            "ffmpeg  -ss {start} -i ./input.mp4 -to {end} -c copy {output}",
+            "ffmpeg  -ss {start} -i {path} -to {end} -c copy {output}",
             start = start,
             end = end,
-            output = output
+            output = output,
+            path = path
         )
     };
-    // let start = "00:00:00";
-    // let end = "00:00:05";
     let name = "output.mp4";
 
     let mut ffmpeg = Command::new("/bin/sh")
-        .args(&["-c", &command(start, end, name)])
+        .args(&["-c", &command(start, end, name, path)])
         .stdin(Stdio::piped())
         .spawn()
         .unwrap();

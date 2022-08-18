@@ -1,19 +1,30 @@
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  HStack,
-  Button,
+    FormControl,
+    FormLabel,
+    Input,
+    HStack,
+    Button, Box
 } from "@chakra-ui/react";
-const Dialog = () => {
+import {FileDialog} from "./types";
+
+type prop = {
+    dialog: FileDialog
+    path: string
+}
+const Dialog = (props: prop) => {
   return (
-    <HStack>
-      <FormControl>
-        <FormLabel>Open file</FormLabel>
-        <Input></Input>
-      </FormControl>
-      <Button>Select</Button>
-    </HStack>
+          <HStack>
+              <Box width={400}>
+                  <FormControl>
+                      <FormLabel>Open file</FormLabel>
+                      <Input value={props.path}></Input>
+                  </FormControl>
+              </Box>
+              <Box>
+                  <Button onClick={props.dialog}>Select</Button>
+              </Box>
+          </HStack>
+
   );
 };
 export default Dialog;
