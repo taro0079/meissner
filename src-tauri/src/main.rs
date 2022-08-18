@@ -72,11 +72,22 @@ fn cut_movie(start: &str, end: &str, path: &str) {
     let splitted: Vec<&str> = path.split(".").collect();
     let name = String::from(splitted[0]) + "_output.mp4" ;
 
-    let mut ffmpeg = Command::new("/bin/sh")
+    let mut ffmpeg = if cfg!(target_os = "windows") {
+        Command::new("cmd")
+            .args(["/C", &command(start, end, name, path)])
+            .stdin(Stdio::piped())
+            .spawn()
+            .unwrap();
+
+
+    } else {
+        Command::new("/bin/sh")
         .args(&["-c", &command(start, end, name, path)])
         .stdin(Stdio::piped())
         .spawn()
         .unwrap();
+    };
 
-    ffmpeg.wait().unwrap();
+    // ffmpeg.wait().unwrap();
+    ffmpeg
 }
