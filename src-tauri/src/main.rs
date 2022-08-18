@@ -58,7 +58,7 @@ fn main() {
 }
 
 #[tauri::command]
-fn cut_movie() {
+fn cut_movie(start: &str, end: &str) {
     let command = |start, end, output| {
         format!(
             "ffmpeg  -ss {start} -i ./input.mp4 -to {end} -c copy {output}",
@@ -67,8 +67,8 @@ fn cut_movie() {
             output = output
         )
     };
-    let start = "00:00:00";
-    let end = "00:00:05";
+    // let start = "00:00:00";
+    // let end = "00:00:05";
     let name = "output.mp4";
 
     let mut ffmpeg = Command::new("/bin/sh")

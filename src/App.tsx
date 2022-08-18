@@ -9,7 +9,7 @@ function App() {
     open().then((files) => console.log(files));
   };
   function exeffmpeg() {
-    invoke("cut_movie");
+    invoke("cut_movie", {start: "00:00:00", end: "00:00:05"});
   }
 
   function executeCommands() {
