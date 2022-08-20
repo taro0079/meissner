@@ -44,6 +44,7 @@ function App() {
 					</div>
 					<Spacer />
 					<Dialog dialog={openFileDialog} path={path} />
+					<MoviePlay />
 					<Form label="Start Time" atom={startTimeAtom} />
 					<Form label="End Time" atom={endTimeAtom} />
 					<Button
@@ -52,7 +53,6 @@ function App() {
 					>
 						Cut!
 					</Button>
-					<MoviePlay />
 
 
 				</VStack>
