@@ -1,16 +1,17 @@
-import video_file from "./mov_hts-samp001.mp4";
 import { Button, VStack, HStack } from "@chakra-ui/react";
 import { useRef, useEffect } from "react";
-// import { dialogPath } from "./myjotai";
-// import { useAtom } from "jotai";
+import { dialogPath } from "./myjotai";
+import { useAtom } from "jotai";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 
 const MoviePlay = () => {
-  //   const [path] = useAtom(dialogPath);
+  const [path] = useAtom(dialogPath);
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     videoRef.current?.load();
   });
   const playStart = () => {
+    // TODO: startとendで指定した区間のみを再生する
     videoRef.current?.play();
   };
   const playPause = () => {
@@ -26,11 +27,8 @@ const MoviePlay = () => {
   return (
     <VStack>
       <div>
-        {/* <video key={path} width="600" ref={videoRef}>
-          <source src={path} />
-          <p>test</p>
-        </video> */}
-        <video src={video_file}>
+        <video key={convertFileSrc(path)} width="600" ref={videoRef}>
+          <source src={convertFileSrc(path)} />
           <p>test</p>
         </video>
       </div>

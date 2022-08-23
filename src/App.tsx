@@ -11,54 +11,51 @@ import { startTimeAtom, endTimeAtom, dialogPath } from "./myjotai";
 import { useAtom } from "jotai";
 import Dialog from "./fileDialog";
 import { FileDialog } from "./types";
-import MoviePlay from "./movie_playing"
-
+import MoviePlay from "./movie_playing";
 
 function App() {
-	const [path, setPath] = useAtom(dialogPath)
-	const openFileDialog: FileDialog = () => {
-		open().then((files) => {
-			if (Array.isArray(files)) {
-				setPath("")
-			} else if (files === null) {
-				setPath("")
-			} else {
-				setPath(files)
-			}
-		});
-	};
-	const exeffmpeg = (startTime: string, endTime: string, path: string) => {
-		invoke("cut_movie", { start: startTime, end: endTime, path: path });
-	};
+  const [path, setPath] = useAtom(dialogPath);
+  const openFileDialog: FileDialog = () => {
+    open().then((files) => {
+      if (Array.isArray(files)) {
+        setPath("");
+      } else if (files === null) {
+        setPath("");
+      } else {
+        setPath(files);
+      }
+    });
+  };
+  const exeffmpeg = (startTime: string, endTime: string, path: string) => {
+    invoke("cut_movie", { start: startTime, end: endTime, path: path });
+  };
 
-	const [startTime] = useAtom(startTimeAtom);
-	const [endTime] = useAtom(endTimeAtom);
+  const [startTime] = useAtom(startTimeAtom);
+  const [endTime] = useAtom(endTimeAtom);
 
-	return (
-		<ChakraProvider>
-			<Container padding="5">
-				<VStack>
-					<div className="text-center">
-						<Heading>Meissner</Heading>
-						<Text>Extremely simple movie editor</Text>
-					</div>
-					<Spacer />
-					<Dialog dialog={openFileDialog} path={path} />
-					<MoviePlay />
-					<Form label="Start Time" atom={startTimeAtom} />
-					<Form label="End Time" atom={endTimeAtom} />
-					<Button
-						colorScheme="teal"
-						onClick={() => exeffmpeg(startTime, endTime, path)}
-					>
-						Cut!
-					</Button>
-
-
-				</VStack>
-			</Container>
-		</ChakraProvider>
-	);
+  return (
+    <ChakraProvider>
+      <Container padding="5">
+        <VStack>
+          <div className="text-center">
+            <Heading>Meissner</Heading>
+            <Text>Extremely simple movie editor</Text>
+          </div>
+          <Spacer />
+          <Dialog dialog={openFileDialog} path={path} />
+          <MoviePlay />
+          <Form label="Start Time" atom={startTimeAtom} />
+          <Form label="End Time" atom={endTimeAtom} />
+          <Button
+            colorScheme="teal"
+            onClick={() => exeffmpeg(startTime, endTime, path)}
+          >
+            Cut!
+          </Button>
+        </VStack>
+      </Container>
+    </ChakraProvider>
+  );
 }
 
 export default App;
