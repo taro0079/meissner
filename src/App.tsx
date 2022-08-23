@@ -1,52 +1,59 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
-import { ChakraProvider } from "@chakra-ui/react";
+import {ChakraProvider, Spacer, VStack} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
+import Form from "./form";
+import { startTimeAtom, endTimeAtom, dialogPath } from "./myjotai";
+import { useAtom } from "jotai";
+import Dialog from "./fileDialog";
+import {FileDialog} from "./types";
+
 
 function App() {
-  const openFileDialog = () => {
-    open().then((files) => console.log(files));
+  const [path, setPath] = useAtom(dialogPath)
+  const openFileDialog: FileDialog = () => {
+    open().then((files) => {
+      if (Array.isArray(files)){
+        setPath("")
+      } else if (files === null) {
+        setPath("")
+      } else {
+        setPath(files)
+      }
+    });
+  };
+  const exeffmpeg = (startTime: string, endTime: string, path: string) => {
+    invoke("cut_movie", { start: startTime, end: endTime, path: path});
   };
 
-  function executeCommands() {
-    // invoke('simple_command')
-    // invoke('command_with_message', {message: 'some message'}).then(message => {
-    // console.log('command_with_message', message)
-    // })
-    // invoke('command_with_object', {message: {field_str: 'some message', field_u32: 12}}).then(message => {
-    // console.log('command_with_object', message)
-    for (let arg of [1, 2]) {
-      invoke("command_with_error", { arg })
-        .then((message) => {
-          console.log("command_with_error", message);
-        })
-        .catch((message) => {
-          console.error("command_with_error", message);
-        });
-    }
-  }
+  const [startTime] = useAtom(startTimeAtom);
+  const [endTime] = useAtom(endTimeAtom);
+
   return (
     <ChakraProvider>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <button onClick={executeCommands}>Click</button>
-          <button onClick={openFileDialog}>Click</button>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+      <Container padding="5">
+        <VStack>
+          <div className="text-center">
+            <Heading>Meissner</Heading>
+            <Text>Extremely simple movie editor</Text>
+          </div>
+          <Spacer />
+          <Dialog dialog={openFileDialog} path={path}/>
+          <Form label="Start Time" atom={startTimeAtom} />
+          <Form label="End Time" atom={endTimeAtom} />
+          <Button
+              colorScheme="teal"
+              onClick={() => exeffmpeg(startTime, endTime, path)}
           >
-            Learn React
-          </a>
-        </header>
-      </div>
+            Cut!
+          </Button>
+
+        </VStack>
+      </Container>
     </ChakraProvider>
   );
 }
