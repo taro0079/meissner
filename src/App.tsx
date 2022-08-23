@@ -1,7 +1,7 @@
 import "./App.css";
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
-import {ChakraProvider, Spacer, VStack} from "@chakra-ui/react";
+import { ChakraProvider, Spacer, VStack } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { Heading } from "@chakra-ui/react";
@@ -10,24 +10,24 @@ import Form from "./form";
 import { startTimeAtom, endTimeAtom, dialogPath } from "./myjotai";
 import { useAtom } from "jotai";
 import Dialog from "./fileDialog";
-import {FileDialog} from "./types";
-
+import { FileDialog } from "./types";
+import MoviePlay from "./movie_playing";
 
 function App() {
-  const [path, setPath] = useAtom(dialogPath)
+  const [path, setPath] = useAtom(dialogPath);
   const openFileDialog: FileDialog = () => {
     open().then((files) => {
-      if (Array.isArray(files)){
-        setPath("")
+      if (Array.isArray(files)) {
+        setPath("");
       } else if (files === null) {
-        setPath("")
+        setPath("");
       } else {
-        setPath(files)
+        setPath(files);
       }
     });
   };
   const exeffmpeg = (startTime: string, endTime: string, path: string) => {
-    invoke("cut_movie", { start: startTime, end: endTime, path: path});
+    invoke("cut_movie", { start: startTime, end: endTime, path: path });
   };
 
   const [startTime] = useAtom(startTimeAtom);
@@ -42,16 +42,16 @@ function App() {
             <Text>Extremely simple movie editor</Text>
           </div>
           <Spacer />
-          <Dialog dialog={openFileDialog} path={path}/>
+          <Dialog dialog={openFileDialog} path={path} />
+          <MoviePlay />
           <Form label="Start Time" atom={startTimeAtom} />
           <Form label="End Time" atom={endTimeAtom} />
           <Button
-              colorScheme="teal"
-              onClick={() => exeffmpeg(startTime, endTime, path)}
+            colorScheme="teal"
+            onClick={() => exeffmpeg(startTime, endTime, path)}
           >
             Cut!
           </Button>
-
         </VStack>
       </Container>
     </ChakraProvider>
