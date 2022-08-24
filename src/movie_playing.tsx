@@ -1,5 +1,5 @@
 import { Button, VStack, HStack } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { dialogPath, startTimeAtom } from "./myjotai";
 import { useAtom } from "jotai";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
@@ -19,15 +19,13 @@ const MoviePlay = () => {
   const [path] = useAtom(dialogPath);
   const [startTime] = useAtom(startTimeAtom);
   const videoRef = useRef<HTMLVideoElement>(null);
-  // useEffect(() => {
-  // 	videoRef.current?.load();
-  // });
+
   const playStart = () => {
     if (videoRef.current?.currentTime == null) {
       return;
     }
     videoRef.current.currentTime = parseTime(startTime);
-    videoRef.current?.play();
+    videoRef.current.play();
   };
   const playPause = () => {
     videoRef.current?.pause();
