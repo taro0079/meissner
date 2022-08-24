@@ -23,22 +23,45 @@ const MoviePlay = () => {
       videoRef.current.currentTime = 0;
     }
   };
+	const [path,] = useAtom(dialogPath);
+	const [startTime,] = useAtom(startTimeAtom)
+	const videoRef = useRef<HTMLVideoElement>(null);
+	// useEffect(() => {
+	// 	videoRef.current?.load();
+	// });
+	const playStart = () => {
 
-  return (
-    <VStack>
-      <div>
-        <video key={convertFileSrc(path)} width="600" ref={videoRef}>
-          <source src={convertFileSrc(path)} />
-          <p>test</p>
-        </video>
-      </div>
-      <HStack>
-        <Button onClick={playStart}>Play</Button>
-        <Button onClick={playPause}>Pause</Button>
-        <Button onClick={playStop}>Stop</Button>
-      </HStack>
-    </VStack>
-  );
+		if (videoRef.current?.currentTime == null) {
+			return;
+		}
+		videoRef.current.currentTime = parseTime(startTime);
+		videoRef.current?.play();
+	};
+	const playPause = () => {
+		videoRef.current?.pause();
+	};
+	const playStop = () => {
+		videoRef.current?.pause();
+		if (videoRef.current?.currentTime) {
+			videoRef.current.currentTime = 0;
+		}
+	};
+
+	return (
+		<VStack>
+			<div>
+				<video key={convertFileSrc(path)} width="600" ref={videoRef}>
+					<source src={convertFileSrc(path)} />
+					<p>test</p>
+				</video>
+			</div>
+			<HStack>
+				<Button onClick={playStart}>Play</Button>
+				<Button onClick={playPause}>Pause</Button>
+				<Button onClick={playStop}>Stop</Button>
+			</HStack>
+		</VStack>
+	);
 };
 
 export default MoviePlay;
